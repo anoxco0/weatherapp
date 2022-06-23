@@ -2,24 +2,348 @@ import "./home.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getOnecall } from "../redux.js/weather_onecall/action";
+// import ApexCharts from "apexcharts";
+// import { Chart } from "./Chart";
 
 const getAllDays = () => {
-    const weakday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    let arr = [];
-    const d = new Date();
-    const day = weakday[d.getDay()];
-    weakday.filter((ele, ind) => {
-      if (day === ele) {
-        for (let i = 0; i < 8; i++) arr.push(weakday[(ind + i) % 7]);
-      }
-      return 1;
-    });
-    return arr;
-  };
+  const weakday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  let arr = [];
+  const d = new Date();
+  const day = weakday[d.getDay()];
+  weakday.filter((ele, ind) => {
+    if (day === ele) {
+      for (let i = 0; i < 8; i++) arr.push(weakday[(ind + i) % 7]);
+    }
+    return 1;
+  });
+  return arr;
+};
 
 export const Home = () => {
   const dispatch = useDispatch();
   const days = getAllDays();
+//   const cities = [
+//     "Mumbai, Maharashtra",
+//     "Delhi, Delhi",
+//     "Banglore, Karnataka",
+//     "Hyderabad, Telangana",
+//     "Ahmedabad, Gujrat",
+//     "Chennai, Tamil Nadu",
+//     "Kolkata, West Bengal",
+//     "Surat, Gujrat",
+//     "Pune, Maharashtra",
+//     "JaiPur, Rajasthan",
+//     "Lucknow, Utter Prades",
+//     "Kanpur, Uttar Pradesh",
+//     "Nagpur, Maharashtra",
+//     "Indore, Madhya Pradesh",
+//     "Thane, Maharashtra",
+//     "Bhopal, Madhya Pradesh",
+//     "Visakhapatnam, Andra Pradesh",
+//     "Pimpri-Chichwad, Maharashtra",
+//     "Vadodara, Gujarat",
+//     "Ghiziabad, Uttar Pradesh",
+//     "Ludhiana, Punjab",
+//     "Agra, Utter Pradesh",
+//     "Nashik,Maharashtra",
+//     "Ranchi, Jharkhand",
+//     "Faridabad, Haryana",
+//     "Meerut, Uttar Pradesh",
+//     "Rajkot, Gujarat",
+//     "Kaluan-Dombivli, Maharashtra",
+//     "VAranasi, Uttar Pradesh",
+//     "Srinagar, Jammu and Kashmir",
+//     "Aurangabad, Maharashtra",
+//     "Dhanbad, Jharkhand",
+//     "Amritsar, Punjab",
+//     "Navi Mumbai, Maharashtra",
+//     "Allahabad, Uttar Pradesh",
+//     "Howrah, Wesh Bengal",
+//     "Gwalior, Madhya Pradesh",
+//     "Jabalpur, Madhya Pradesh",
+//     "Coimbatore, Tamil Nadu",
+//     "Vijaywada, Andhra Pradesh",
+//     "Jodhpur, Rajasthan",
+//     "Madurai, Tamil Nadu",
+//     "Raipur, Chhattisgarh",
+//     "Kota, Rajasthan",
+//     "Chandigarh, Chandigarh",
+//     "Guwahati, Assam",
+//     "Solapur, Maharashtra",
+//     "Hubli-Dharwad, Karnataka",
+//     "Mysore, Karnataka",
+//     "Tiruchirappalli, Tamil Nadu",
+//     "Bareilly, Uttar Pradesh",
+//     "Aligarh, Uttar Pradesh",
+//     "Tiruppur, Tamil Nadu",
+//     "Gurgaon, Haryana",
+//     "Moradabad, Uttar Pradesh",
+//     "Jalandhar, Punjab",
+//     "Bhubaneswar, Odisha",
+//     "Salem, Tamil Nadu",
+//     "Warangal, Telangana",
+//     "Mira-Bhayandar, Maharashtra",
+//     "Jalgaon, Maharashtra",
+//     "Guntur, Andhra Pradesh",
+//     "Tiruvananthpuram, Kerala",
+//     "Bhiwandi, Maharashtra",
+//     "Saharanpur, Uttar Pradesh",
+//     "Gorakhpur, Uttar Pradesh",
+//     "Bikaner, Rajasthan",
+//     "Amravati, Maharashtra",
+//     "Noida, Uttar Pradesh",
+//     "Jamshedpur, Jharkhand",
+//     "Bhilai, Chhattisgarh",
+//     "Cuttack, Odisha",
+//     "Firozabad, Uttar Pradesh",
+//     "Kochi, Kerala",
+//     "Nellore, Andhra Pradesh",
+//     "Bhavnagar, Gujarat",
+//     "Dehradun, Uttarakhand",
+//     "Durgapur, West Bengal",
+//     "Asansol, West Bengal",
+//     "Rourkela, Odisha",
+//     "Nanded, Maharashtra",
+//     "Kolhapur, Maharashtra",
+//     "Ajmer, Rajasthan",
+//     "Akola, Maharashtra",
+//     "Gulbarga, Karnataka",
+//     "Jamnagar, Gujarat",
+//     "Ujjain, Madhya Pradesh",
+//     "Loni, Uttar Pradesh",
+//     "Silliguri, West Bengal",
+//     "Jhanshi, Uttar Pradesh",
+//     "Ulhasnagar, Maharashtra",
+//     "Jammu, Jammu and Kashmir",
+//     "Sangli-Miraj & Kupwad, Maharashtra",
+//     "Mangalore, Karnataka",
+//     "Erode, Tamil Nadu",
+//     "Belgaum, Karnataka",
+//     "Kunool, Andhra Pradesh",
+//     "Ambattur, Tamil Nadu",
+//     "Rajahmundry, Andhra Pradesh",
+//     "Tirunelveli, Tamil Nadu",
+//     "Malegaon, Maharashtra",
+//     "Gaya, Bihar",
+//     "Udaipur, Rajasthan",
+//     "Karur, Tamil Nadu",
+//     "Kakinada, Andhra Pradesh",
+//     "Davanagere, Karnataka",
+//     "Kozhikode, Kerala",
+//     "Maheshtala, West Bengal",
+//     "Bokaro, Jharkhand",
+//     "South Dumdum, West Bengal",
+//     "Bellary, Karnataka",
+//     "Ptiala, Punjab",
+//     "Gopalpur, West Bengal",
+//     "Agartala, Tripura",
+//     "Bhagalpur, Bihar",
+//     "Muzzaffarnagar, Uttar Pradesh",
+//     "Bhatpara, West Bengal",
+//     "Panihati, West Bengal",
+//     "Latur, Maharashtra",
+//     "Dhule, Maharashtra",
+//     "Rohtak, Haryana",
+//     "Sagar, Madhya Pradesh",
+//     "Korba, Chhattisgarh",
+//     "Bhilwara, Rajasthan",
+//     "Berhampur, Odisha",
+//     "Muzaffarpur, Bihar",
+//     "Ahmednagar, Maharashtra",
+//     "Mathura, Uttar Pradesh",
+//     "Kollam, Kerala",
+//     "Avadi, Tamil Nadu",
+//     "Kadapa, Andhra Pradesh",
+//     "Anantapuram, Andhra Pradesh",
+//     "Kamarhati, West Bengal",
+//     "Bilaspur, Chhattisgarh",
+//     "Sambalpur, Odisha",
+//     "Shahjahanpur, Uttar Pradesh",
+//     "Satara, Maharashtra",
+//     "Bijapur, Karnataka",
+//     "Rampur, Uttar Pradesh",
+//     "Shimoga, Karnataka",
+//     "Chandrapur, Maharashtra",
+//     "Junagadh, Gujarat",
+//     "Thrissur, Kerala",
+//     "Alwar, Rajasthan",
+//     "Bardhaman, West Bengal",
+//     "Kulti, West Bengal",
+//     "Nizamabad, Telangana",
+//     "Parbhani, Maharashtra",
+//     "Tumkur, Karnataka",
+//     "Khammam, Telangana",
+//     "Uzhavarkarai, Puducherry",
+//     "Bihar Sharif, Bihar",
+//     "Panipat, Haryana",
+//     "Darbhanga, Bihar",
+//     "Bally, West Bengal",
+//     "Aizawl, Mizoram",
+//     "Dewas, Madhya pradesh",
+//     "Ichalkaranji, Maharashtra",
+//     "Karnal, Haryana",
+//     "Bathinda, Punjab",
+//     "Jalna, Maharashtra",
+//     "Eluru, Andra Pradesh",
+//     "Barasat, West Bengal",
+//     "Kirari Suleman Nagar, Delhi",
+//     "Purnia, Bihar",
+//     "Satna, Madhya Pradesh",
+//     "Mau, Uttar Pradesh",
+//     "Sonipat, Haryana",
+//     "Farrukhabad, Uttar Pradesh",
+//     "Durg, Chhattisgarh",
+//     "Imphal, Manipur",
+//     "Ratlam, Madhya Pradesh",
+//     "Hapur, Uttar Pradesh",
+//     "Arrah, Bihar",
+//     "Anantapur, Andhra Pradesh",
+//     "Karimnagar, Telangana",
+//     "Etawah, Uttar Pradesh",
+//     "Ambarnath, Maharashtra",
+//     "North Dumdum, West Bengal",
+//     "Bharatpur, Rajastahan",
+//     "Begusarai, Bihar",
+//     "New Delhi, Delhi",
+//     "Gandhidham, Gujrat",
+//     "Barangar, West Bengal",
+//     "Tiruvottiyur, Tamil Nadu",
+//     "Pondicherry, Puducherry",
+//     "Sikar, Rajasthan",
+//     "Thoothukudi, Tamil Nadu",
+//     "Rewa, Madhya Pradesh",
+//     "Mirzapur, Uttar Pradesh",
+//     "Raichur, Karnataka",
+//     "Pali, Rajasthan",
+//     "Ramagundam, Telangana",
+//     "Silchar, Assam",
+//     "Haridwar, Uttarakhand",
+//     "Vijayanagaram, Andhra Pradesh",
+//     "Tenali, Andhra Pradesh",
+//     "Nagercoil, Tamil Nadu",
+//     "Sri Ganganagar, Rajasthan",
+//     "Karawal Nagar, Delhi",
+//     "Mango, Jharkhand",
+//     "Thanjavur, Tamil Nadu",
+//     "Bulandshahr, Uttar Pradesh",
+//     "Uluberia, West Bengal",
+//     "Katni, Madhya Pradesh",
+//     "Sambhal, Uttar Pradesh",
+//     "Singrauli, Madhya Pradesh",
+//     "Nadiad, Gujrat",
+//     "Secunderabad, Telangana",
+//     "Naihati, West Bengal",
+//     "Yamunanagar, Haryana",
+//     "Bidhannagar, West Bengal",
+//     "Pallavaram, Tamil Nadu",
+//     "Bidar, Karnataka",
+//     "Munger, Bihar",
+//     "Panchkula, Haryana",
+//     "Burhanpur, Madhya Pradesh",
+//     "Kharagpur, West Bengal",
+//     "Dindigul, Tamil Nadu",
+//     "Gnadhinagar, Gujarat",
+//     "Hospet, Karnataka",
+//     " Nangloi Jat, Delhi",
+//     "Malda, West Bengal",
+//     "Ongole, Andhra Pradesh",
+//     "Deoghar, Jharkhand",
+//     "Chhapra, Bihar",
+//     "Puri, Odisha",
+//     "Haldia, West Bengal",
+//     "Khandwa, Madhya Pradesh",
+//     "Nandyal, Andhra Pradesh",
+//     "Morena, Madhya Pradesh",
+//     "Amroha, Uttar Pradesh",
+//     "Anand, Gujarat",
+//     "Bhind, Madhya Pradesh",
+//     "Bhalswa Jahangir Pur, Delhi",
+//     "Madhyamgram, West Bengal",
+//     "Bhiwani, Haryana",
+//     "Berhampore, West Bengal",
+//     "Ambala, Haryana",
+//     "Morbi, Gujarat",
+//     "Fatehpur, Uttar Pradesh",
+//     "Raebareli, Uttar Pradesh",
+//     "Khora, Ghaziabad",
+//     "Chittor, Andhra Pradesh",
+//     "Bhuswal, Maharashtra",
+//     "Orai, Uttar Pradesh",
+//     "Bahraich, Uttar Pradesh",
+//     "Phusro, Jharkhand",
+//     "Vellore, Tamil Nadu",
+//     "Mehsana, Gujarat",
+//     "Raiganj, West Bengal",
+//     "Sirsa, Haryana",
+//     "Danapur, Bihar",
+//     "Serampore, West Bengal",
+//     "Sultan Pur Majra, Delhi",
+//     "Guna, Madhya Pradesh",
+//     "Jaunpur, Uttar Pradesh",
+//     "Panvel, Maharashtra",
+//     "Shivpuri, Madhya Pradesh",
+//     "Surendranagar Dudhrej, Gujarat",
+//     "Unnao, Uttar Pradesh",
+//     "Chinsurah, West Bengal",
+//     "Alappuzha, Kerala",
+//     "Kottayam, Kerala",
+//     "Machilipatnam, Andhra Pradesh",
+//     "Shimla, Himanchal Pradesh",
+//     "Midnapore, West Bengal",
+//     "Adoni, Andhra Pradesh",
+//     "Udupi, Karnataka",
+//     "Katihar, Bihar",
+//     "Proddatur, Andhra Pradesh",
+//     "Budaun, Uttar Pradesh",
+//     "Mahbubnagar, Uttar Pradesh",
+//     "Saharsa, Bihar",
+//     "Dibrugarh, Assam",
+//     "Jorhat, Assam",
+//     "Hazaribagh, Jharkhand",
+//     "Hindupur, Andra Pradesh",
+//     "Nagaon, Assam",
+//     "Hajipur, Bihar",
+//     "Sasaram, Bihar",
+//     "Giridih, Jharkhand",
+//     "Bhimavaram, Andra Pradesh",
+//     "Port Blair, Andaman and Nicobar Islands UT",
+//     "Kumbakonam, Tamil Nadu",
+//     "Dehri, Bihar",
+//     "Madanpalle, Andra Pradesh",
+//     "Siwan, Bihar",
+//     "Bettiah, Bihar",
+//     "Ramgarh, Jharkhand",
+//     "Tinsukia, Assam",
+//     "Guntakal, Andhra Pradesh",
+//     "Srikakulam, Andhra Pradesh",
+//     "Motihari, Bihar",
+//     "Dharmavaram, Andhra Pradesh",
+//     "Medininagar, Jharkhand",
+//     "Gudivada, Andhra Pradesh",
+//     "Phagwara, Punjab",
+//     "Pudukkottai, Tamil Nadu",
+//     "Hosur, Tamil Nadu",
+//     "Narasaraopet, Andhra Pradesh",
+//     "Suryapet, Telangaana",
+//     "Miryalaguda, Telangana",
+//     "Anantnag, Jammu and Kashmir",
+//     "Tadipatri, Andhra Pradesh",
+//     "Karaikudi, Tamil Nadu",
+//     "Kishanganj, Bihar",
+//     "Gangavathi, Karnataka",
+//     "Ballia, Uttar Pradesh",
+//     "Jamalpur, Bihar",
+//     "Kavali, Andhra Pradesh",
+//     "Tadepalligudem, Andhra Pradesh",
+//     "Amaravati, Andhra Pradesh",
+//     "Buxar, Bihar",
+//     "Tezpur, Assam",
+//     "Jehanabad, Bihar",
+//     "Aurangabad, Bihar",
+//     "Gangtok, Sikkim",
+//     "Vasco Da Gama, Goa",
+//     "Nawada, Bihar",
+//   ];
   const [index, setIndex] = useState(0);
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(function success(position) {
@@ -67,138 +391,151 @@ export const Home = () => {
         </div>
       </div>
       <div className="days">
-          {days.map((el, ind) => (
-            <div
-              onClick={() => setIndex(ind)}
-              key={ind}
-              className="day"
-              style={{
-                border: `4px solid ${index === ind ? "blue" : "white"}`,
-              }}
-            >
-              <p style={{ fontSize: "15px", fontWeight: "600" }}>{el}</p>
-              {weather_onecall.daily ? (
-                <>
-                  <p>
-                    {Math.round(weather_onecall.daily[ind].temp.max)}°{" "}
-                    {Math.round(weather_onecall.daily[ind].temp.min)}°
-                  </p>
-                  <img
-                    src={
-                      weather_onecall.daily[ind].weather[0].main === "Clouds"
-                        ? "https://cdn-icons-png.flaticon.com/512/1146/1146856.png"
-                        : weather_onecall.daily[ind].weather[0].main === "Rain"
-                        ? "https://cdn-icons-png.flaticon.com/512/1146/1146858.png"
-                        : weather_onecall.daily[ind].weather[0].main === "Clear"
-                        ? "https://cdn-icons-png.flaticon.com/512/890/890347.png"
-                        : ""
-                    }
-                    alt=""
-                  />
-                  <p>{weather_onecall.daily[ind].weather[0].main}</p>
-                </>
-              ) : (
-                ""
-              )}
-            </div>
-          ))}
-        </div>
-        <div className="temp_var">
+        {days.map((el, ind) => (
           <div
+            onClick={() => setIndex(ind)}
+            key={ind}
+            className="day"
             style={{
-              fontSize: "60px",
-              display: "flex",
-              fontWeight: "600",
-              width: "220px",
-              justifyContent: "space-between",
+              border: `4px solid ${index === ind ? "blue" : "white"}`,
             }}
           >
+            <p style={{ fontSize: "20px", fontWeight: "600" }}>{el}</p>
             {weather_onecall.daily ? (
               <>
-                {Math.round(weather_onecall.daily[index].temp.max)}°C
+                <p>
+                  <span>
+                    {Math.round(weather_onecall.daily[ind].temp.max)}°
+                  </span>
+                  <span style={{ color: "gray" }}>
+                    {Math.round(weather_onecall.daily[ind].temp.min)}°
+                  </span>
+                </p>
                 <img
-                  style={{ width: "60px", height: "60px" }}
                   src={
-                    weather_onecall.daily[index].weather[0].main === "Clouds"
+                    weather_onecall.daily[ind].weather[0].main === "Clouds"
                       ? "https://cdn-icons-png.flaticon.com/512/1146/1146856.png"
-                      : weather_onecall.daily[index].weather[0].main === "Rain"
+                      : weather_onecall.daily[ind].weather[0].main === "Rain"
                       ? "https://cdn-icons-png.flaticon.com/512/1146/1146858.png"
-                      : weather_onecall.daily[index].weather[0].main === "Clear"
+                      : weather_onecall.daily[ind].weather[0].main === "Clear"
                       ? "https://cdn-icons-png.flaticon.com/512/890/890347.png"
                       : ""
                   }
                   alt=""
                 />
+                <p style={{ fontSize: "20px" }}>
+                  {weather_onecall.daily[ind].weather[0].main}
+                </p>
               </>
             ) : (
               ""
             )}
           </div>
+        ))}
+      </div>
+      <div className="temp_var">
+        <div
+          style={{
+            fontSize: "60px",
+            display: "flex",
+            fontWeight: "600",
+            width: "220px",
+            justifyContent: "space-between",
+          }}
+        >
           {weather_onecall.daily ? (
             <>
-              <div style={{ display: "flex",}}>
-                <div
-                  style={{
-                    width: "50%",
-                    backgroundColor: "#0887e129",
-                    borderRadius: "5px",
-                    padding: "10px",
-                    margin: "5px",
-                    fontSize: "16px",
-                    lineHeight: "18.4px",
-                  }}
-                >
-                  <div style={{ fontWeight: "700", lineHeight: "18.4px" }}>
-                    Pressure
-                  </div>
-                  <div>{weather_onecall.daily[index].pressure} hpa</div>
-                </div>
-                <div
-                  style={{
-                    width: "50%",
-                    backgroundColor: "#0887e129",
-                    borderRadius: "5px",
-                    padding: "10px",
-                    margin: "5px",
-                    fontSize: "16px",
-                    lineHeight: "18.4px",
-                  }}
-                >
-                  <div style={{ fontWeight: "700" }}>Humidity</div>
-                  <div>{weather_onecall.daily[index].humidity}%</div>
-                </div>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  width: "100%",
-                  justifyContent: "space-between",
-                  fontSize: "16px",
-                  lineHeight: "18.4px"
-                }}
-              >
-                <div>
-                  <div style={{fontWeight:"700"}}>Sunrise</div>
-                  <div>
-                    {new Date(
-                      +weather_onecall.daily[index].sunrise*1000
-                    ).toLocaleTimeString("en-IN")}
-                  </div>
-                </div>
-                <div>
-                  <div style={{fontWeight:"700"}}>Sunset</div>
-                  <div>
-                    {new Date(
-                      +weather_onecall.daily[index].sunset*1000
-                    ).toLocaleTimeString("en-In")}
-                  </div>
-                </div>
-              </div>
+              {Math.round(weather_onecall.daily[index].temp.max)}°C
+              <img
+                style={{ width: "60px", height: "60px" }}
+                src={
+                  weather_onecall.daily[index].weather[0].main === "Clouds"
+                    ? "https://cdn-icons-png.flaticon.com/512/1146/1146856.png"
+                    : weather_onecall.daily[index].weather[0].main === "Rain"
+                    ? "https://cdn-icons-png.flaticon.com/512/1146/1146858.png"
+                    : weather_onecall.daily[index].weather[0].main === "Clear"
+                    ? "https://cdn-icons-png.flaticon.com/512/890/890347.png"
+                    : ""
+                }
+                alt=""
+              />
             </>
           ) : (
             ""
           )}
         </div>
+        {/* {weather_onecall.hourly?<Chart index = {index}/>:""} */}
+        {weather_onecall.daily ? (
+          <>
+            <div style={{ display: "flex" }}>
+              <div
+                style={{
+                  width: "50%",
+                  backgroundColor: "#0887e129",
+                  borderRadius: "5px",
+                  padding: "10px",
+                  margin: "5px",
+                  fontSize: "16px",
+                  lineHeight: "18.4px",
+                }}
+              >
+                <div style={{ fontWeight: "700", lineHeight: "18.4px" }}>
+                  Pressure
+                </div>
+                <div>{weather_onecall.daily[index].pressure} hpa</div>
+              </div>
+              <div
+                style={{
+                  width: "50%",
+                  backgroundColor: "#0887e129",
+                  borderRadius: "5px",
+                  padding: "10px",
+                  margin: "5px",
+                  fontSize: "16px",
+                  lineHeight: "18.4px",
+                }}
+              >
+                <div style={{ fontWeight: "700" }}>Humidity</div>
+                <div>{weather_onecall.daily[index].humidity}%</div>
+              </div>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+                fontSize: "16px",
+                lineHeight: "18.4px",
+              }}
+            >
+              <div>
+                <div style={{ fontWeight: "700" }}>Sunrise</div>
+                <div>
+                  {new Date(
+                    +weather_onecall.daily[index].sunrise * 1000
+                  ).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </div>
+              </div>
+              <div>
+                <div style={{ fontWeight: "700" }}>Sunset</div>
+                <div>
+                  {new Date(
+                    +weather_onecall.daily[index].sunset * 1000
+                  ).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </div>
+              </div>
+            </div>
+          </>
+        ) : (
+          ""
+        )}
+      </div>
     </div>
   );
 };

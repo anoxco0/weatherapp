@@ -4,6 +4,7 @@ import {
 } from "./action"
 
 const initial = {
+    loading:true,
     weather_loading: false,
     weather_error:false,
     weather_onecall:{},
@@ -18,6 +19,7 @@ export const weather_reducer = (store = initial, {
             return {
                 ...store,
                 weather_loading: true,
+                loading:true
             }
         case WEATHER_ERROR:
             return{
@@ -30,7 +32,8 @@ export const weather_reducer = (store = initial, {
                 ...store,
                 weather_loading:false,
                 weather_error:false,
-                weather_onecall:payload
+                weather_onecall:payload,
+                loading:false
             }
             default:
                 return store

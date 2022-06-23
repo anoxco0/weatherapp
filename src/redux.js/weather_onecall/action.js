@@ -19,7 +19,7 @@ export const weatherOnecall = (payload) => ({
 
 export const getOnecall = (lat, lon) => (dispatch) => {
     dispatch(weatherLoading())
-    axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutelyalerts&units=metric&appid=e4c70ce6a6821649a416cb9521d5f4f8`)
+    axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutelyalerts&units=metric&appid=d07f44f393d328ed6b9bd3de4e36c2f8`)
         .then(res => dispatch(weatherOnecall(res.data)))
         .catch(error => dispatch(weather_error()));
 }
