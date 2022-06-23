@@ -103,6 +103,102 @@ export const Home = () => {
             </div>
           ))}
         </div>
+        <div className="temp_var">
+          <div
+            style={{
+              fontSize: "60px",
+              display: "flex",
+              fontWeight: "600",
+              width: "220px",
+              justifyContent: "space-between",
+            }}
+          >
+            {weather_onecall.daily ? (
+              <>
+                {Math.round(weather_onecall.daily[index].temp.max)}°C
+                <img
+                  style={{ width: "60px", height: "60px" }}
+                  src={
+                    weather_onecall.daily[index].weather[0].main === "Clouds"
+                      ? "https://cdn-icons-png.flaticon.com/512/1146/1146856.png"
+                      : weather_onecall.daily[index].weather[0].main === "Rain"
+                      ? "https://cdn-icons-png.flaticon.com/512/1146/1146858.png"
+                      : weather_onecall.daily[index].weather[0].main === "Clear"
+                      ? "https://cdn-icons-png.flaticon.com/512/890/890347.png"
+                      : ""
+                  }
+                  alt=""
+                />
+              </>
+            ) : (
+              ""
+            )}
+          </div>
+          {weather_onecall.daily ? (
+            <>
+              <div style={{ display: "flex",}}>
+                <div
+                  style={{
+                    width: "50%",
+                    backgroundColor: "#0887e129",
+                    borderRadius: "5px",
+                    padding: "10px",
+                    margin: "5px",
+                    fontSize: "16px",
+                    lineHeight: "18.4px",
+                  }}
+                >
+                  <div style={{ fontWeight: "700", lineHeight: "18.4px" }}>
+                    Pressure
+                  </div>
+                  <div>{weather_onecall.daily[index].pressure} hpa</div>
+                </div>
+                <div
+                  style={{
+                    width: "50%",
+                    backgroundColor: "#0887e129",
+                    borderRadius: "5px",
+                    padding: "10px",
+                    margin: "5px",
+                    fontSize: "16px",
+                    lineHeight: "18.4px",
+                  }}
+                >
+                  <div style={{ fontWeight: "700" }}>Humidity</div>
+                  <div>{weather_onecall.daily[index].humidity}%</div>
+                </div>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  justifyContent: "space-between",
+                  fontSize: "16px",
+                  lineHeight: "18.4px"
+                }}
+              >
+                <div>
+                  <div style={{fontWeight:"700"}}>Sunrise</div>
+                  <div>
+                    {new Date(
+                      +weather_onecall.daily[index].sunrise*1000
+                    ).toLocaleTimeString("en-IN")}
+                  </div>
+                </div>
+                <div>
+                  <div style={{fontWeight:"700"}}>Sunset</div>
+                  <div>
+                    {new Date(
+                      +weather_onecall.daily[index].sunset*1000
+                    ).toLocaleTimeString("en-In")}
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            ""
+          )}
+        </div>
     </div>
   );
 };
