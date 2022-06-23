@@ -1,5 +1,6 @@
 import { applyMiddleware, combineReducers, compose, createStore } from "redux";
 import thunk from "redux-thunk";
+import { weather_reducer } from "./weather_onecall/reducer";
 
 const composeEnhancers=
    typeof window === 'object' &&
@@ -11,6 +12,7 @@ const enhancer = composeEnhancers(
 );
 
 const rootReducer = combineReducers({
+    weather : weather_reducer,
 });
 
 export const store = createStore(rootReducer, enhancer);
