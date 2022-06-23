@@ -1,41 +1,66 @@
-.App{
+.App {
     width: 40%;
     border: 5px solid rgba(128, 128, 128, 0.525);
     padding: 20px;
     border-radius: 30px;
     background-color: white;
- }
- .search_div{
-   display: flex;
-   justify-content: space-between;
-   padding: 10px;
-   border: 1px solid gray;
-   border-radius: 7px;
- }
- .search_div>div:first-child{
-   display: flex;
- }
- .search_div input{
-   border: transparent;
-   outline: transparent;
-   font-size: 16px;
-   width: 100%;
- }
+}
 
- @media only screen and (max-Width:1200px){
-    .App{
-      width: 60%;
+.search_div {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid gray;
+    border-radius: 7px;
+}
+
+.search_div>div:first-child {
+    display: flex;
+}
+
+.search_div input {
+    border: transparent;
+    outline: transparent;
+    font-size: 16px;
+    width: 100%;
+}
+
+.days {
+    display: flex;
+    height: 200px;
+    width: 100%;
+    margin: 10px auto;
+    overflow-x: scroll;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.day {
+    width: 100px;
+    text-align: center;
+}
+
+.day img {
+    width: 30px;
+}
+@media only screen and (max-Width:1200px) {
+    .App {
+        width: 60%;
     }
-  }
-  @media only screen and (max-Width:850px){
-    .App{
-      width: 80%;
+}
+
+@media only screen and (max-Width:850px) {
+    .App {
+        width: 80%;
     }
-  }
-  @media only screen and (max-Width:600px){
-    .App{
-      width: calc(100% - 40px);
-      border: transparent;
-      border-radius: 0;
+}
+
+@media only screen and (max-Width:600px) {
+    .App {
+        width: calc(100% - 40px);
+        border: transparent;
+        border-radius: 0;
     }
-  }
+}

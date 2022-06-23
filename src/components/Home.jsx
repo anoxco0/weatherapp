@@ -1,5 +1,33 @@
 import "./home.css";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { getOnecall } from "../redux.js/weather_onecall/action";
+
+const getAllDays = () => {
+    const weakday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    let arr = [];
+    const d = new Date();
+    const day = weakday[d.getDay()];
+    weakday.filter((ele, ind) => {
+      if (day === ele) {
+        for (let i = 0; i < 8; i++) arr.push(weakday[(ind + i) % 7]);
+      }
+      return 1;
+    });
+    return arr;
+  };
+
 export const Home = () => {
+  const dispatch = useDispatch();
+  const days = getAllDays();
+  const [index, setIndex] = useState(0);
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(function success(position) {
+      dispatch(getOnecall(position.coords.latitude, position.coords.longitude));
+    });
+  }, [dispatch]);
+  const { weather_onecall } = useSelector((store) => store.weather);
+
   return (
     <div className="App">
       <div className="search_div">
@@ -38,6 +66,43 @@ export const Home = () => {
           </svg>
         </div>
       </div>
+      <div className="days">
+          {days.map((el, ind) => (
+            <div
+              onClick={() => setIndex(ind)}
+              key={ind}
+              className="day"
+              style={{
+                border: `4px solid ${index === ind ? "blue" : "white"}`,
+              }}
+            >
+              <p style={{ fontSize: "15px", fontWeight: "600" }}>{el}</p>
+              {weather_onecall.daily ? (
+                <>
+                  <p>
+                    {Math.round(weather_onecall.daily[ind].temp.max)}°{" "}
+                    {Math.round(weather_onecall.daily[ind].temp.min)}°
+                  </p>
+                  <img
+                    src={
+                      weather_onecall.daily[ind].weather[0].main === "Clouds"
+                        ? "https://cdn-icons-png.flaticon.com/512/1146/1146856.png"
+                        : weather_onecall.daily[ind].weather[0].main === "Rain"
+                        ? "https://cdn-icons-png.flaticon.com/512/1146/1146858.png"
+                        : weather_onecall.daily[ind].weather[0].main === "Clear"
+                        ? "https://cdn-icons-png.flaticon.com/512/890/890347.png"
+                        : ""
+                    }
+                    alt=""
+                  />
+                  <p>{weather_onecall.daily[ind].weather[0].main}</p>
+                </>
+              ) : (
+                ""
+              )}
+            </div>
+          ))}
+        </div>
     </div>
   );
 };
