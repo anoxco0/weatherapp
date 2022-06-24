@@ -32,7 +32,7 @@ export const getOnecall = (lat, lon) => (dispatch) => {
 
 export const getLocation = (lat, lon) => (dispatch) => {
     dispatch(weatherLoading());
-    axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=64a1b2bf693c8827c861e064d96655e2`)
+    axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=ddc894a0a38425be12ca6bbf79cb31e5`)
     .then(res=>dispatch(get_location(res.data.name)))
     .catch(error=>dispatch(weather_error()));
 }

@@ -7,7 +7,6 @@ import { Chart } from "./Chart";
 import { getDAta } from "../redux.js/debouncing/action";
 
 const getAllDays = () => {
-
   const weakday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   let arr = [];
@@ -17,61 +16,57 @@ const getAllDays = () => {
   const day = weakday[d.getDay()];
 
   weakday.filter((ele, ind) => {
-
     if (day === ele) {
       for (let i = 0; i < 8; i++) arr.push(weakday[(ind + i) % 7]);
     }
 
     return 1;
-
   });
 
   return arr;
 };
 
-
 export const Home = () => {
-
   const dispatch = useDispatch();
   const days = getAllDays();
+  const [locationSt, setLocationSt] = useState(true);
+  const [searchModel, setSearchModel] = useState(false)
+  const [lat, setLat] = useState("");
+  const [lon, setLon] = useState("")
   const [index, setIndex] = useState(0);
   const [focused, setFocused] = useState(false);
   const onFocus = () => setFocused(true);
   const onBlur = () => setFocused(false);
 
-
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(function success(position) {
-
-      dispatch(getLocation(position.coords.latitude, position.coords.longitude));
-
-      dispatch(getOnecall(position.coords.latitude, position.coords.longitude));
+      if(locationSt){setLat(position.coords.latitude);
+      setLon(position.coords.longitude)};
     });
+    dispatch(
+      getLocation(lat, lon)
+    );
+    dispatch(getOnecall(lat, lon));
+  }, [dispatch, lat, lon]);
 
-  }, [dispatch]);
-
-  
   const { curr_location } = useSelector((store) => store.weather);
   const { weather_onecall } = useSelector((store) => store.weather);
 
   const keyPressed = (e) => {
     if (e.keyCode === 13) {
-
     }
   };
   const searchCity = (e) => {
     let value = document.getElementById("location_in").value;
-    dispatch(getDAta(value))
+    if (value.length > 0) {dispatch(getDAta(value)); setSearchModel(true)};
   };
-  const {get_data_success} = useSelector(store=>store.debouncing);
+  const { get_data_success } = useSelector((store) => store.debouncing);
   // console.log(get_data_success)
-  const debounce = (func, delay)=>{
-    setTimeout(()=>{
+  const debounce = (func, delay) => {
+    setTimeout(() => {
       func();
-    }, delay)
-  }
-
-
+    }, delay);
+  };
 
   return (
     <div className="App">
@@ -202,9 +197,7 @@ export const Home = () => {
           )}
         </div>
 
-
-        {weather_onecall.hourly?<Chart index = {index}/>:""}
-
+        {weather_onecall.hourly ? <Chart index={index} /> : ""}
 
         {weather_onecall.daily ? (
           <>
@@ -277,14 +270,45 @@ export const Home = () => {
           ""
         )}
       </div>
-      {get_data_success.length&&focused?<div className="search_model">
-        {get_data_success.map((el,i)=><div key={i} style={{padding:"10px", borderBottom:"1px solid gray"}}>
-          <div style={{fontSize:"16px", lineHeight:"18.4px"}}>
-            <span style={{fontWeight:"700"}}>{el.split(', ')[0]}, </span>
-            <span>{el.split(', ')[1]}</span>
-          </div>
-        </div>)}
-      </div>:""}
+      {get_data_success.length&&searchModel? (
+        <div className="search_model">
+          {get_data_success.map((el, i) => (
+            <div
+            onClick={()=>{console.log("clicked");if(el.coord){setLat(el.coord.lat); setLon(el.coord.lon); document.getElementById("location_in").value="";setLocationSt(false); setSearchModel(false)}}}
+              key={i}
+              style={{ padding: "10px", borderBottom: "1px solid gray",display:"flex", justifyContent:"space-between" }}
+            >
+              <div style={{ fontSize: "16px", lineHeight: "18.4px" }}>
+                <span style={{ fontWeight: "700" }}>
+                  {el.name ? el.name.split(", ")[0] : el.split(", ")[0]},{" "}
+                </span>
+                <span>
+                  {el.name ? el.name.split(", ")[1] : el.split(", ")[1]}
+                </span>
+              </div>
+              <div style={{display:"flex", gap:"10px"}}>
+                <div style={{ fontSize: "16px", lineHeight: "18.4px" }}>
+                  <div style={{fontWeight:"700"}}>{el.main ? Math.round(el.main.temp) : "IN"}° C</div>
+                  <div>{el.weather? el.weather[0].main : ""}</div>
+                </div>
+                <div>
+                 {el.weather?
+                  <img style={{height:"35px"}}
+                  src={el.weather[0].main === "Clouds" ? "https://cdn-icons-png.flaticon.com/512/1146/1146856.png"
+                  : el.weather[0].main === "Rain"
+                  ? "https://cdn-icons-png.flaticon.com/512/1146/1146858.png"
+                  : el.weather[0].main === "Clear"
+                  ? "https://cdn-icons-png.flaticon.com/512/890/890347.png":""}
+                  alt=""
+                />:<img src="" alt=""/>}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };
