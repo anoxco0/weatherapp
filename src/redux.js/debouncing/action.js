@@ -27,16 +27,15 @@ export const getDAta = (value) => (dispatch) => {
             dat = dat.filter(city => city.toLowerCase().includes(value.toLowerCase()));
             dat.forEach((element, i) => {
                 axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${element.split(', ')[0]}&units=metric&appid=ddc894a0a38425be12ca6bbf79cb31e5`)
-                    .then(Response => {
-                        if (Response.data) {
-                            let city = Response.data;
-                            city.name = element;
-                            dat[i] = city;
-                        }
-                    })
-                    .catch(error => console.log(error))
+                .then(Response => {
+                    if (Response.data) {
+                        let city = Response.data;
+                        city.name = element;
+                        dat[i] = city;
+                    }
+                })
+                .catch(error => console.log(error))
             });
-            console.log(dat)
             dispatch(getDataSuccess(dat))
         })
         .catch(erro => dispatch(getDataFailure()))

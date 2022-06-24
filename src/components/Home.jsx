@@ -1,10 +1,12 @@
 import "./home.css";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getLocation, getOnecall } from "../redux.js/weather_onecall/action";
 // import ApexCharts from "apexcharts";
 import { Chart } from "./Chart";
 import { getDAta } from "../redux.js/debouncing/action";
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 const getAllDays = () => {
   const weakday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -29,8 +31,9 @@ const getAllDays = () => {
 export const Home = () => {
   const dispatch = useDispatch();
   const days = getAllDays();
+  const buttonRef = useRef(null);
   const [locationSt, setLocationSt] = useState(true);
-  const [searchModel, setSearchModel] = useState(false)
+  const [searchModel, setSearchModel] = useState(false);
   const [lat, setLat] = useState("");
   const [lon, setLon] = useState("")
   const [index, setIndex] = useState(0);
@@ -60,13 +63,22 @@ export const Home = () => {
     let value = document.getElementById("location_in").value;
     if (value.length > 0) {dispatch(getDAta(value)); setSearchModel(true)};
   };
-  const { get_data_success } = useSelector((store) => store.debouncing);
-  // console.log(get_data_success)
+  const { get_data_success, get_data_loading } = useSelector((store) => store.debouncing);
   const debounce = (func, delay) => {
     setTimeout(() => {
       func();
     }, delay);
   };
+
+  const buttonClickedOutside = useOutsideClick(buttonRef);
+
+  useEffect(() => {
+    if (buttonClickedOutside) {
+      searchModel(false)
+    }
+  }, [buttonClickedOutside, dispatch, searchModel]);
+
+
 
   return (
     <div className="App">
@@ -270,11 +282,13 @@ export const Home = () => {
           ""
         )}
       </div>
-      {get_data_success.length&&searchModel? (
-        <div className="search_model">
+      {get_data_loading?<div className="search_model" ref={buttonRef}>
+        <CircularProgress />
+      </div>:get_data_success.length&&searchModel? (
+        <div className="search_model" ref={buttonRef}>
           {get_data_success.map((el, i) => (
             <div
-            onClick={()=>{console.log("clicked");if(el.coord){setLat(el.coord.lat); setLon(el.coord.lon); document.getElementById("location_in").value="";setLocationSt(false); setSearchModel(false)}}}
+            onClick={()=>{if(el.coord){setLat(el.coord.lat); setLon(el.coord.lon); document.getElementById("location_in").value="";setLocationSt(false); setSearchModel(false)}}}
               key={i}
               style={{ padding: "10px", borderBottom: "1px solid gray",display:"flex", justifyContent:"space-between" }}
             >
@@ -298,9 +312,14 @@ export const Home = () => {
                   : el.weather[0].main === "Rain"
                   ? "https://cdn-icons-png.flaticon.com/512/1146/1146858.png"
                   : el.weather[0].main === "Clear"
-                  ? "https://cdn-icons-png.flaticon.com/512/890/890347.png":""}
+                  ? "https://cdn-icons-png.flaticon.com/512/890/890347.png"
+                  :el.weather[0].main==="Mist"
+                  ?"https://cdn-icons-png.flaticon.com/512/4005/4005817.png"
+                  :el.weather[0].main==="Haze"
+                  ?"https://cdn-icons-png.flaticon.com/512/1779/1779807.png"
+                  :""}
                   alt=""
-                />:<img src="" alt=""/>}
+                />:<img style={{height:"35px"}} src="https://cdn-icons.flaticon.com/png/512/5217/premium/5217790.png?token=exp=1656103750~hmac=2996b4a7a8bb1c0999af4f4782620f6d" alt=""/>}
                 </div>
               </div>
             </div>
@@ -311,4 +330,27 @@ export const Home = () => {
       )}
     </div>
   );
+};
+
+
+const useOutsideClick = (ref) => {
+  const [outsieClick, setOutsideClick] = useState(null);
+  
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!ref.current.contains(e.target)) {
+        setOutsideClick(true);
+      } else {
+        setOutsideClick(false);
+      }
+      setOutsideClick(null);
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [ref]);
+  return outsieClick;
 };
