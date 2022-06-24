@@ -47,7 +47,7 @@ export const Home = () => {
       getLocation(lat, lon)
     );
     dispatch(getOnecall(lat, lon));
-  }, [dispatch, lat, lon]);
+  }, [dispatch, lat, locationSt, lon]);
 
   const { curr_location } = useSelector((store) => store.weather);
   const { weather_onecall } = useSelector((store) => store.weather);
