@@ -1,4 +1,5 @@
 import {
+    GET_LOCATION,
     WEATHER_ERROR,
     WEATHER_LOADING, WEATHER_ONECALL
 } from "./action"
@@ -8,6 +9,7 @@ const initial = {
     weather_loading: false,
     weather_error:false,
     weather_onecall:{},
+    curr_location:"",
 }
 
 export const weather_reducer = (store = initial, {
@@ -34,6 +36,14 @@ export const weather_reducer = (store = initial, {
                 weather_error:false,
                 weather_onecall:payload,
                 loading:false
+            }
+        case GET_LOCATION:
+            return {
+                ...store,
+                weather_loading:false,
+                weather_error:false,
+                loading:false,
+                curr_location:payload,
             }
             default:
                 return store
