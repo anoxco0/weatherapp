@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getLocation, getOnecall } from "../redux.js/weather_onecall/action";
 // import ApexCharts from "apexcharts";
 import { Chart } from "./Chart";
+import { getDAta } from "../redux.js/debouncing/action";
 
 const getAllDays = () => {
 
@@ -29,7 +30,6 @@ const getAllDays = () => {
 };
 
 
-
 export const Home = () => {
 
   const dispatch = useDispatch();
@@ -43,9 +43,7 @@ export const Home = () => {
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(function success(position) {
 
-      dispatch(
-        getLocation(position.coords.latitude, position.coords.longitude)
-      );
+      dispatch(getLocation(position.coords.latitude, position.coords.longitude));
 
       dispatch(getOnecall(position.coords.latitude, position.coords.longitude));
     });
@@ -61,10 +59,17 @@ export const Home = () => {
 
     }
   };
-
-  const updateInput = (e) => {
-    
+  const searchCity = (e) => {
+    let value = document.getElementById("location_in").value;
+    dispatch(getDAta(value))
   };
+  const {get_data_success} = useSelector(store=>store.debouncing);
+  // console.log(get_data_success)
+  const debounce = (func, delay)=>{
+    setTimeout(()=>{
+      func();
+    }, delay)
+  }
 
 
 
@@ -93,7 +98,7 @@ export const Home = () => {
           <input
             type="text"
             id="location_in"
-            onChange={(e) => updateInput(e)}
+            onInput={(e) => debounce(searchCity, 1000)}
             onKeyUp={(e) => keyPressed(e)}
             placeholder={curr_location}
             onFocus={onFocus}
@@ -272,6 +277,14 @@ export const Home = () => {
           ""
         )}
       </div>
+      {get_data_success.length&&focused?<div className="search_model">
+        {get_data_success.map((el,i)=><div key={i} style={{padding:"10px", borderBottom:"1px solid gray"}}>
+          <div style={{fontSize:"16px", lineHeight:"18.4px"}}>
+            <span style={{fontWeight:"700"}}>{el.split(', ')[0]}, </span>
+            <span>{el.split(', ')[1]}</span>
+          </div>
+        </div>)}
+      </div>:""}
     </div>
   );
 };

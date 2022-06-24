@@ -1,5 +1,5 @@
 import ApexCharts from "apexcharts";
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
 
 const getData = (index, weather) => {
@@ -32,7 +32,7 @@ const getData = (index, weather) => {
 export const Chart = ({index})=>{
     const {weather_onecall} = useSelector(store=>store.weather);
     const {times,data}=useMemo(()=>getData(index, weather_onecall),[weather_onecall,index]);
-    console.log(times, data);
+    // console.log(times, data);
    var options = {
     series: [{
     name: 'temperature',
@@ -64,7 +64,10 @@ export const Chart = ({index})=>{
   };
 
   var chart = new ApexCharts(document.querySelector("#chart"), options);
-  chart.render();
+  chart.render(
+    <React.StrictMode>
+    </React.StrictMode>
+  );
     return (
         <div id="chart">
 
