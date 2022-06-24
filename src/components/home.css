@@ -73,4 +73,7 @@
         border: transparent;
         border-radius: 0;
     }
+    .main {
+        height: fit-content;
+      }
 }

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getLocation, getOnecall } from "../redux.js/weather_onecall/action";
 // import ApexCharts from "apexcharts";
-// import { Chart } from "./Chart";
+import { Chart } from "./Chart";
 
 const getAllDays = () => {
 
@@ -27,6 +27,8 @@ const getAllDays = () => {
 
   return arr;
 };
+
+
 
 export const Home = () => {
 
@@ -63,6 +65,7 @@ export const Home = () => {
   const updateInput = (e) => {
     
   };
+
 
 
   return (
@@ -193,7 +196,11 @@ export const Home = () => {
             ""
           )}
         </div>
-        {/* {weather_onecall.hourly?<Chart index = {index}/>:""} */}
+
+
+        {weather_onecall.hourly?<Chart index = {index}/>:""}
+
+
         {weather_onecall.daily ? (
           <>
             <div style={{ display: "flex" }}>
