@@ -6,6 +6,7 @@ import { getLocation, getOnecall } from "../redux.js/weather_onecall/action";
 import { Chart } from "./Chart";
 import { getDAta } from "../redux.js/debouncing/action";
 import CircularProgress from '@mui/material/CircularProgress';
+import { Map } from "./Map";
 
 
 const getAllDays = () => {
@@ -281,6 +282,9 @@ export const Home = () => {
         ) : (
           ""
         )}
+      </div>
+      <div>
+        <Map/>
       </div>
       {get_data_loading?<div className="search_model" ref={buttonRef}>
         <CircularProgress />

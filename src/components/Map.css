@@ -1,0 +1,4 @@
+.gmap_iframe{
+    width: calc(100% - 20px);
+    height: 400px;
+} 
