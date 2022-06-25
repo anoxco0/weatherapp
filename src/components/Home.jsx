@@ -178,6 +178,9 @@ export const Home = () => {
       ) : (
         ""
       )}
+       <div>
+        <Map/>
+      </div>
       <div className="temp_var">
         <div
           style={{
@@ -283,9 +286,7 @@ export const Home = () => {
           ""
         )}
       </div>
-      <div>
-        <Map/>
-      </div>
+     
       {get_data_loading?<div className="search_model" ref={buttonRef}>
         <CircularProgress />
       </div>:get_data_success.length&&searchModel? (
