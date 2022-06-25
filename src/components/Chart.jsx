@@ -32,10 +32,9 @@ const getData = (index, weather) => {
 export const Chart = ({index})=>{
     const {weather_onecall} = useSelector(store=>store.weather);
     const {times,data}=useMemo(()=>getData(index, weather_onecall),[weather_onecall,index]);
-    // console.log(times, data);
-   var options = {
+   let options = {
     series: [{
-    name: 'temperature',
+    name: 'temperature(°C)',
     data: data[index]
   }],
     chart: {
@@ -63,7 +62,7 @@ export const Chart = ({index})=>{
   },
   };
 
-  var chart = new ApexCharts(document.querySelector("#chart"), options);
+  let chart = new ApexCharts(document.querySelector("#chart"), options);
   chart.render(
     <React.StrictMode>
     </React.StrictMode>

@@ -6,6 +6,7 @@ import { Chart } from "./Chart";
 import { GetAllData, getDAta } from "../redux.js/debouncing/action";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Map } from "./Map";
+import { Sunchart } from "./Sunchart";
 
 const getAllDays = () => {
   const weakday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -278,6 +279,9 @@ export const Home = () => {
         ) : (
           ""
         )}
+        {weather_onecall.daily?<div>
+          <Sunchart/>
+        </div>:""}
       </div>
 
       {get_data_loading ? (
