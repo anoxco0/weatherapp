@@ -1,13 +1,11 @@
 import "./home.css";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { getLocation, getOnecall } from "../redux.js/weather_onecall/action";
-// import ApexCharts from "apexcharts";
 import { Chart } from "./Chart";
-import { getDAta } from "../redux.js/debouncing/action";
-import CircularProgress from '@mui/material/CircularProgress';
+import { GetAllData, getDAta } from "../redux.js/debouncing/action";
+import CircularProgress from "@mui/material/CircularProgress";
 import { Map } from "./Map";
-
 
 const getAllDays = () => {
   const weakday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -32,11 +30,10 @@ const getAllDays = () => {
 export const Home = () => {
   const dispatch = useDispatch();
   const days = getAllDays();
-  const buttonRef = useRef(null);
   const [locationSt, setLocationSt] = useState(true);
   const [searchModel, setSearchModel] = useState(false);
   const [lat, setLat] = useState("");
-  const [lon, setLon] = useState("")
+  const [lon, setLon] = useState("");
   const [index, setIndex] = useState(0);
   const [focused, setFocused] = useState(false);
   const onFocus = () => setFocused(true);
@@ -44,42 +41,39 @@ export const Home = () => {
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(function success(position) {
-      if(locationSt){setLat(position.coords.latitude);
-      setLon(position.coords.longitude)};
+      if (locationSt) {
+        setLat(position.coords.latitude);
+        setLon(position.coords.longitude);
+      }
     });
-    dispatch(
-      getLocation(lat, lon)
-    );
+    dispatch(getLocation(lat, lon));
     dispatch(getOnecall(lat, lon));
   }, [dispatch, lat, locationSt, lon]);
 
   const { curr_location } = useSelector((store) => store.weather);
   const { weather_onecall } = useSelector((store) => store.weather);
 
-  const keyPressed = (e) => {
-    if (e.keyCode === 13) {
-    }
-  };
   const searchCity = (e) => {
     let value = document.getElementById("location_in").value;
-    if (value.length > 0) {dispatch(getDAta(value)); setSearchModel(true)};
+    if (value.length > 0) {
+      dispatch(getDAta(value));
+    }
   };
-  const { get_data_success, get_data_loading } = useSelector((store) => store.debouncing);
+  const { get_data_success, get_data_loading } = useSelector(
+    (store) => store.debouncing
+  );
+  useEffect(() => {
+    if (get_data_success.length) {
+      dispatch(GetAllData(get_data_success));
+      setSearchModel(true);
+    }
+  }, [dispatch, get_data_success]);
   const debounce = (func, delay) => {
     setTimeout(() => {
       func();
     }, delay);
   };
-
-  const buttonClickedOutside = useOutsideClick(buttonRef);
-
-  useEffect(() => {
-    if (buttonClickedOutside) {
-      searchModel(false)
-    }
-  }, [buttonClickedOutside, dispatch, searchModel]);
-
-
+  const { all_city_data } = useSelector((store) => store.debouncing);
 
   return (
     <div className="App">
@@ -106,8 +100,7 @@ export const Home = () => {
           <input
             type="text"
             id="location_in"
-            onInput={(e) => debounce(searchCity, 1000)}
-            onKeyUp={(e) => keyPressed(e)}
+            onInput={(e) => debounce(searchCity, 1500)}
             placeholder={curr_location}
             onFocus={onFocus}
             onBlur={onBlur}
@@ -178,8 +171,8 @@ export const Home = () => {
       ) : (
         ""
       )}
-       <div>
-        <Map/>
+      <div>
+        <Map />
       </div>
       <div className="temp_var">
         <div
@@ -286,16 +279,36 @@ export const Home = () => {
           ""
         )}
       </div>
-     
-      {get_data_loading?<div className="search_model" ref={buttonRef}>
-        <CircularProgress />
-      </div>:get_data_success.length&&searchModel? (
-        <div className="search_model" ref={buttonRef}>
-          {get_data_success.map((el, i) => (
+
+      {get_data_loading ? (
+        <div className="search_model">
+          <CircularProgress />
+        </div>
+      ) : (
+        ""
+      )}
+      {all_city_data && searchModel ? (
+        <div className="search_model">
+          {all_city_data.map((el, i) => (
             <div
-            onClick={()=>{if(el.coord){setLat(el.coord.lat); setLon(el.coord.lon); document.getElementById("location_in").value="";setLocationSt(false); setSearchModel(false)}}}
+              onClick={() => {
+                if (el.coord) {
+                  setLat(el.coord.lat);
+                  setLon(el.coord.lon);
+                  document.getElementById("location_in").value = "";
+                  setLocationSt(false);
+                  setSearchModel(false);
+                } else {
+                  dispatch(get_data_loading());
+                }
+              }}
               key={i}
-              style={{ padding: "10px", borderBottom: "1px solid gray",display:"flex", justifyContent:"space-between" }}
+              style={{
+                padding: "10px",
+                borderBottom: "1px solid gray",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
             >
               <div style={{ fontSize: "16px", lineHeight: "18.4px" }}>
                 <span style={{ fontWeight: "700" }}>
@@ -305,26 +318,39 @@ export const Home = () => {
                   {el.name ? el.name.split(", ")[1] : el.split(", ")[1]}
                 </span>
               </div>
-              <div style={{display:"flex", gap:"10px"}}>
+              <div style={{ display: "flex", gap: "10px" }}>
                 <div style={{ fontSize: "16px", lineHeight: "18.4px" }}>
-                  <div style={{fontWeight:"700"}}>{el.main ? Math.round(el.main.temp) : "IN"}° C</div>
-                  <div>{el.weather? el.weather[0].main : ""}</div>
+                  <div style={{ fontWeight: "700" }}>
+                    {el.main ? Math.round(el.main.temp) : "IN"}° C
+                  </div>
+                  <div>{el.weather ? el.weather[0].main : ""}</div>
                 </div>
                 <div>
-                 {el.weather?
-                  <img style={{height:"35px"}}
-                  src={el.weather[0].main === "Clouds" ? "https://cdn-icons-png.flaticon.com/512/1146/1146856.png"
-                  : el.weather[0].main === "Rain"
-                  ? "https://cdn-icons-png.flaticon.com/512/1146/1146858.png"
-                  : el.weather[0].main === "Clear"
-                  ? "https://cdn-icons-png.flaticon.com/512/890/890347.png"
-                  :el.weather[0].main==="Mist"
-                  ?"https://cdn-icons-png.flaticon.com/512/4005/4005817.png"
-                  :el.weather[0].main==="Haze"
-                  ?"https://cdn-icons-png.flaticon.com/512/1779/1779807.png"
-                  :""}
-                  alt=""
-                />:<img style={{height:"35px"}} src="https://cdn-icons.flaticon.com/png/512/5217/premium/5217790.png?token=exp=1656103750~hmac=2996b4a7a8bb1c0999af4f4782620f6d" alt=""/>}
+                  {el.weather ? (
+                    <img
+                      style={{ height: "35px" }}
+                      src={
+                        el.weather[0].main === "Clouds"
+                          ? "https://cdn-icons-png.flaticon.com/512/1146/1146856.png"
+                          : el.weather[0].main === "Rain"
+                          ? "https://cdn-icons-png.flaticon.com/512/1146/1146858.png"
+                          : el.weather[0].main === "Clear"
+                          ? "https://cdn-icons-png.flaticon.com/512/890/890347.png"
+                          : el.weather[0].main === "Mist"
+                          ? "https://cdn-icons-png.flaticon.com/512/4005/4005817.png"
+                          : el.weather[0].main === "Haze"
+                          ? "https://cdn-icons-png.flaticon.com/512/1779/1779807.png"
+                          : ""
+                      }
+                      alt=""
+                    />
+                  ) : (
+                    <img
+                      style={{ height: "35px" }}
+                      src="https://cdn-icons.flaticon.com/png/512/5217/premium/5217790.png?token=exp=1656103750~hmac=2996b4a7a8bb1c0999af4f4782620f6d"
+                      alt=""
+                    />
+                  )}
                 </div>
               </div>
             </div>
@@ -335,27 +361,4 @@ export const Home = () => {
       )}
     </div>
   );
-};
-
-
-const useOutsideClick = (ref) => {
-  const [outsieClick, setOutsideClick] = useState(null);
-  
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (!ref.current.contains(e.target)) {
-        setOutsideClick(true);
-      } else {
-        setOutsideClick(false);
-      }
-      setOutsideClick(null);
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [ref]);
-  return outsieClick;
 };
