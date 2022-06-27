@@ -5,7 +5,7 @@ const init = {
     get_data_success : [],
     get_data_failure:false,
     all_city_data : [],
-    cities:[],
+    cities:true,
 }
 
 export const debouncing = (store=init,{type, payload}) =>{
@@ -38,7 +38,7 @@ export const debouncing = (store=init,{type, payload}) =>{
         case GET_CITIES:
             return{
                 ...store,
-                cities:payload,
+                cities:true,
             }
         default :
         return store

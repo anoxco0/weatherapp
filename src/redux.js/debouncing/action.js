@@ -19,8 +19,8 @@ export const getDataFailure = () => ({
     type: GET_DATA_FAILURE,
 })
 
-export const getCities = (payload) =>({
-    payload,
+export const getCities = () =>({
+    type:GET_CITIES
 })
 
 export const getAllData = (payload) =>({
@@ -47,10 +47,8 @@ export const GetAllData = (allData) =>(dispatch)=>{
     dispatch(getDataLoading());
     let AllData = [];
     allData.forEach((element, i) => {
-        dispatch(getDataLoading())
-        axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${element.split(', ')[0]}&units=metric&appid=e4c70ce6a6821649a416cb9521d5f4f8git `)
+        axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${element.split(', ')[0]}&units=metric&appid=e4c70ce6a6821649a416cb9521d5f4f8`)
         .then(Response => {
-            dispatch(getDataLoading())
             if (Response.data) {
                 let city = Response.data;
                 city.name=element;
