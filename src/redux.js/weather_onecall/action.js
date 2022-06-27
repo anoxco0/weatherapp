@@ -25,14 +25,14 @@ export const get_location = (payload) => ({
 
 export const getOnecall = (lat, lon) => (dispatch) => {
     dispatch(weatherLoading())
-    axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutelyalerts&units=metric&appid=32ba0bfed592484379e51106cef3f204`)
+    axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutelyalerts&units=metric&appid=e4c70ce6a6821649a416cb9521d5f4f8`)
         .then(res => dispatch(weatherOnecall(res.data)))
         .catch(error => dispatch(weather_error()));
 }
 
 export const getLocation = (lat, lon) => (dispatch) => {
     dispatch(weatherLoading());
-    axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=32ba0bfed592484379e51106cef3f204`)
+    axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=e4c70ce6a6821649a416cb9521d5f4f8`)
     .then(res=>dispatch(get_location(res.data.name)))
     .catch(error=>dispatch(weather_error()));
 }

@@ -48,8 +48,9 @@ export const GetAllData = (allData) =>(dispatch)=>{
     let AllData = [];
     allData.forEach((element, i) => {
         dispatch(getDataLoading())
-        axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${element.split(', ')[0]}&units=metric&appid=ddc894a0a38425be12ca6bbf79cb31e5`)
+        axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${element.split(', ')[0]}&units=metric&appid=e4c70ce6a6821649a416cb9521d5f4f8git `)
         .then(Response => {
+            dispatch(getDataLoading())
             if (Response.data) {
                 let city = Response.data;
                 city.name=element;
