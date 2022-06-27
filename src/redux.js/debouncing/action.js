@@ -50,13 +50,11 @@ export const GetAllData = (allData) =>(dispatch)=>{
         dispatch(getDataLoading())
         axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${element.split(', ')[0]}&units=metric&appid=ddc894a0a38425be12ca6bbf79cb31e5`)
         .then(Response => {
-            dispatch(getDataLoading())
             if (Response.data) {
                 let city = Response.data;
                 city.name=element;
                 AllData.push(city);
             }
-            dispatch(getCities(AllData))
         })
         .catch(error => dispatch(getDataFailure()));
     });
